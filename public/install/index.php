@@ -55,7 +55,7 @@ if (!$installed && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 <style>
 @font-face{font-family:Vazirmatn;src:url(<?= $base ?>/assets/fonts/vazirmatn-var.woff2) format('woff2');font-weight:100 900}
 :root{--p:#12304f;--g:#c6a15b;--bg:#f7f2ea;--ink:#161a21;--line:rgba(0,0,0,.12)}
-*{box-sizing:border-box}body{margin:0;font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8}
+*{box-sizing:border-box}html{-webkit-tap-highlight-color:transparent}body{margin:0;font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8}
 .wrap{max-width:760px;margin:0 auto;padding:32px 16px 60px}
 .head{display:flex;align-items:center;gap:14px;margin-bottom:26px}.head svg{width:52px;color:var(--g)}
 h1{margin:0;font-weight:400;font-size:1.7rem}h1 small{display:block;font-size:.85rem;color:#777}

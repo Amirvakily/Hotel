@@ -22,6 +22,8 @@ foreach ($theme as $k => $v) {
         $css .= $k . ':' . $v . ';';
     }
 }
+[$accBg, $accFg] = accent_pair((string)setting('theme.accent'), (string)setting('theme.ink'));
+$css .= '--c-accent-btn:' . $accBg . ';--c-on-accent:' . $accFg . ';';
 $css .= '--hero-shade:' . max(0, min(90, (int)setting('theme.hero_overlay', 40))) / 100 . ';';
 $css .= '--radius:' . max(0, min(40, (int)setting('theme.radius', 22))) . 'px;';
 $favicon = media(setting('site.favicon'));
@@ -62,8 +64,9 @@ if ($ogImg) {
 <meta property="og:locale" content="<?= e(I18n::meta()['locale']) ?>">
 <?php if ($ogImg): ?><meta property="og:image" content="<?= e(abs_url(Media::src($ogImg, 1600))) ?>"><meta name="twitter:card" content="summary_large_image"><?php endif; ?>
 <meta name="theme-color" content="<?= e(setting('theme.primary')) ?>">
-<?php if ($lang === 'en'): ?><link rel="preload" href="<?= e(asset('fonts/jakarta-var.woff2')) ?>" as="font" type="font/woff2" crossorigin><?php else: ?><link rel="preload" href="<?= e(asset('fonts/vazirmatn-var.woff2')) ?>" as="font" type="font/woff2" crossorigin><?php endif; ?>
-<link rel="stylesheet" href="<?= e(asset('css/site.css')) ?>">
+<?php /* Same URL as the @font-face rule (no ?v=), so the font downloads once */ ?>
+<link rel="preload" href="<?= e(App::$base . '/assets/fonts/' . ($lang === 'en' ? 'jakarta-var.woff2' : 'vazirmatn-var.woff2')) ?>" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="<?= e(asset_min('css/site.css')) ?>">
 <style>:root{<?= $css ?>}</style>
 <script>document.documentElement.classList.replace('no-js','js');</script>
 <?php if ($favicon): ?><link rel="icon" href="<?= e(Media::src($favicon, 480, 'png')) ?>"><?php else: ?><link rel="icon" href="<?= e(asset('img/favicon.svg')) ?>" type="image/svg+xml"><?php endif; ?>
@@ -101,7 +104,7 @@ if ($ogImg) {
     ],
     'preloader' => (bool)setting('theme.preloader', true),
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?>;</script>
-<script src="<?= e(asset('js/site.js')) ?>" defer></script>
+<script src="<?= e(asset_min('js/site.js')) ?>" defer></script>
 <?= (string)setting('seo.footer_code', '') ?>
 </body>
 </html>

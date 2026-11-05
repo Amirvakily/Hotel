@@ -3,7 +3,7 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title><?= e(__('admin.login')) ?> · <?= e(tr(setting('site.name'))) ?></title>
 <link rel="icon" href="<?= e(asset('img/favicon.svg')) ?>" type="image/svg+xml">
-<link rel="stylesheet" href="<?= e(asset('admin/admin.css')) ?>"></head>
+<link rel="stylesheet" href="<?= e(asset_min('admin/admin.css')) ?>"></head>
 <body class="login-page">
 <main class="login-box">
   <div class="login-brand"><span class="sb-mark"><svg viewBox="0 0 40 40"><rect x="10" y="10" width="20" height="20" rx="3"/><rect x="10" y="10" width="20" height="20" rx="3" transform="rotate(45 20 20)"/><circle cx="20" cy="20" r="4.2"/></svg></span>

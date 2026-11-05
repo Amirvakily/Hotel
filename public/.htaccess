@@ -27,19 +27,21 @@ AddDefaultCharset UTF-8
 
 # Compression
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript application/json image/svg+xml font/ttf
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript application/xml application/javascript application/x-javascript application/json application/manifest+json image/svg+xml image/x-icon font/ttf
 </IfModule>
 
-# Long browser cache for versioned static files (URLs carry ?v=...)
+# Long browser cache: assets carry ?v=..., uploaded files get new random names
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
-  ExpiresByType image/webp "access plus 1 month"
-  ExpiresByType image/jpeg "access plus 1 month"
-  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
 </IfModule>
 <IfModule mod_headers.c>
   <FilesMatch "\.(css|js|woff2|svg)$">

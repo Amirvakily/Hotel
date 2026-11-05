@@ -99,6 +99,7 @@ return [
     'gallery.empty' => 'No photos yet.',
     'gallery.all_photos' => 'All photos',
     'gallery.viewer' => 'Photo viewer',
+    'gallery.photo' => 'Photo {n}',
 
     'tour.title' => '360° Virtual Tour',
     'tour.subtitle' => 'Walk through the lobby, rooms and café before you arrive.',

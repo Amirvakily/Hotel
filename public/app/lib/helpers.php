@@ -137,11 +137,72 @@ function abs_url(string $relative): string
     return $origin . $relative;
 }
 
+/** WCAG contrast ratio between two [r, g, b] colours. */
+function contrast_ratio(array $a, array $b): float
+{
+    $lum = function (array $c): float {
+        $c = array_map(function ($v) {
+            $v /= 255;
+            return $v <= 0.03928 ? $v / 12.92 : (($v + 0.055) / 1.055) ** 2.4;
+        }, $c);
+        return 0.2126 * $c[0] + 0.7152 * $c[1] + 0.0722 * $c[2];
+    };
+    $x = $lum($a);
+    $y = $lum($b);
+    return (max($x, $y) + 0.05) / (min($x, $y) + 0.05);
+}
+
+/**
+ * Readable colours for a button in the accent colour: [background, text].
+ * White text when it reaches 4.5:1, otherwise the accent is darkened a little,
+ * and very light accents (gold, yellow) get dark text instead.
+ */
+function accent_pair(string $hex, string $dark = '#111316'): array
+{
+    if (preg_match('~^#([0-9a-f])([0-9a-f])([0-9a-f])$~i', $hex, $s)) {
+        $hex = '#' . $s[1] . $s[1] . $s[2] . $s[2] . $s[3] . $s[3];
+    }
+    if (!preg_match('~^#([0-9a-f]{6})$~i', $hex, $m)) {
+        return [$hex, '#fff'];
+    }
+    $rgb = array_map('hexdec', str_split($m[1], 2));
+    $white = [255, 255, 255];
+    for ($k = 0; $k <= 6; $k++) {
+        $c = array_map(fn($v) => (int)round($v * (1 - 0.04 * $k)), $rgb);
+        if (contrast_ratio($c, $white) >= 4.5) {
+            return [sprintf('#%02x%02x%02x', ...$c), '#fff'];
+        }
+    }
+    return [$hex, preg_match('~^#[0-9a-f]{6}$~i', $dark) ? $dark : '#111316'];
+}
+
 function asset(string $path): string
 {
     $file = ROOT . '/assets/' . $path;
     $v = is_file($file) ? substr(base_convert((string)filemtime($file), 10, 36), -6) : VENUS_VERSION;
     return App::$base . '/assets/' . $path . '?v=' . $v;
+}
+
+/**
+ * Like asset(), but serves the minified copy (site.min.css next to site.css) when it was
+ * built from the current source: scripts/minify.sh writes the source's md5 on its first line.
+ */
+function asset_min(string $path): string
+{
+    static $memo = [];
+    if (isset($memo[$path])) {
+        return $memo[$path];
+    }
+    $min = (string)preg_replace('~\.(css|js)$~', '.min.$1', $path);
+    $src = ROOT . '/assets/' . $path;
+    $minFile = ROOT . '/assets/' . $min;
+    if ($min !== $path && is_file($minFile) && is_file($src)) {
+        $head = (string)@file_get_contents($minFile, false, null, 0, 48);
+        if (preg_match('~^/\*src:([0-9a-f]{32})\*/~', $head, $m) && hash_equals($m[1], (string)md5_file($src))) {
+            return $memo[$path] = asset($min);
+        }
+    }
+    return $memo[$path] = asset($path);
 }
 
 function upload_url(string $rel): string

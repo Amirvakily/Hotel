@@ -12,7 +12,7 @@ $i = $i ?? 0;
   data-name="<?= e(tr($room['name'])) ?>" data-prices="<?= e(json_enc((object)$pd['fmt'])) ?>" data-sec="<?= e(json_enc((object)$pd['sec'])) ?>" data-extra="<?= e(json_enc((object)$pd['extra'])) ?>"
   data-from="<?= e($p['from'] ? money($p['from']) : '') ?>" data-reveal style="--d:<?= $i % 3 ?><?= $color ? ';--room-color:' . e($color) : '' ?>">
   <a class="room-media" href="<?= e($href) ?>" tabindex="-1" aria-hidden="true">
-    <div class="room-img"><?= picture($room['cover_id'], ['sizes' => '(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw', 'alt' => tr($room['name'])]) ?></div>
+    <div class="room-img"><?= picture($room['cover_id'], ['sizes' => '(max-width: 700px) 92vw, (max-width: 1100px) 46vw, 30vw', 'alt' => tr($room['name']), 'eager' => !empty($eager)]) ?></div>
     <?php if ($badge !== ''): ?><span class="room-badge"><?= e($badge) ?></span><?php endif; ?>
     <?php if ($room['scene_id']): ?><span class="room-360" title="360°"><?= icon('rotate-3d') ?></span><?php endif; ?>
   </a>

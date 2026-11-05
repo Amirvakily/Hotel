@@ -13,7 +13,7 @@ $isActive = function (string $path) use ($current): bool {
 ?>
 <header class="site-header<?= $over ? ' is-over' : '' ?>" data-header>
   <div class="header-bar">
-    <a class="brand" href="<?= e(url('')) ?>" aria-label="<?= e(tr(setting('site.name'))) ?>">
+    <a class="brand" href="<?= e(url('')) ?>">
       <?= View::partial('front/partials/logo') ?>
     </a>
     <nav class="main-nav" aria-label="<?= e(__('nav.label')) ?>">
@@ -26,8 +26,8 @@ $isActive = function (string $path) use ($current): bool {
     <div class="header-actions">
       <?php if (count(I18n::$enabled) > 1): ?>
       <div class="lang-switch" data-dropdown>
-        <button class="icon-btn lang-btn" type="button" aria-haspopup="true" aria-expanded="false" data-dropdown-btn aria-label="<?= e(__('common.language')) ?>">
-          <?= icon('globe') ?><span><?= e(I18n::meta()['short']) ?></span>
+        <button class="icon-btn lang-btn" type="button" aria-haspopup="true" aria-expanded="false" data-dropdown-btn>
+          <?= icon('globe') ?><span class="sr-only"><?= e(__('common.language')) ?> </span><span><?= e(I18n::meta()['short']) ?></span>
         </button>
         <ul class="lang-menu" data-dropdown-menu hidden>
           <?php foreach (I18n::$enabled as $l): ?>

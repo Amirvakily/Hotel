@@ -98,6 +98,7 @@ return [
     'gallery.empty' => 'هنوز تصویری اضافه نشده است.',
     'gallery.all_photos' => 'همه تصاویر',
     'gallery.viewer' => 'نمایش تصویر',
+    'gallery.photo' => 'عکس {n}',
 
     'tour.title' => 'تور مجازی ۳۶۰ درجه',
     'tour.subtitle' => 'قبل از سفر، در لابی، اتاق‌ها و کافه هتل قدم بزنید.',

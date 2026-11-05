@@ -79,9 +79,10 @@
   var header = $('[data-header]');
   (function () {
     if (!header) return;
-    var last = w.scrollY, ticking = false;
+    var last = -1, ticking = false;
     function update() {
       var y = w.scrollY;
+      if (last < 0) last = y;
       header.classList.toggle('is-scrolled', y > 40);
       var hide = y > 220 && y > last + 4 && !body.classList.contains('menu-open');
       var show = y < last - 4 || y < 220;
@@ -90,7 +91,7 @@
       last = y; ticking = false;
     }
     on(w, 'scroll', function () { if (!ticking) { ticking = true; w.requestAnimationFrame(update); } }, { passive: true });
-    update();
+    w.requestAnimationFrame(update);
   })();
 
   // ---------- mobile menu ----------
@@ -132,9 +133,12 @@
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    // Anything already on the first screen (even at its bottom edge) comes in straight away
+    function inView() { $$('[data-reveal]:not(.is-in)').forEach(function (e) { var r = e.getBoundingClientRect(); if (r.top < w.innerHeight && r.bottom > 0) { e.classList.add('is-in'); io.unobserve(e); } }); }
     els.forEach(function (e) { io.observe(e); });
+    w.requestAnimationFrame(inView);
     // Never leave content hidden if something goes wrong
-    setTimeout(function () { $$('[data-reveal]:not(.is-in)').forEach(function (e) { var r = e.getBoundingClientRect(); if (r.top < w.innerHeight) e.classList.add('is-in'); }); }, 2500);
+    setTimeout(inView, 2000);
   })();
 
   // ---------- hero slider ----------
@@ -181,7 +185,7 @@
       ticking = false;
     }
     on(w, 'scroll', function () { if (!ticking) { ticking = true; w.requestAnimationFrame(update); } }, { passive: true });
-    update();
+    w.requestAnimationFrame(update);
   })();
 
   // ---------- counters ----------
@@ -611,7 +615,7 @@
     on(next, 'click', function () { track.scrollBy({ left: step() * dir, behavior: reduce ? 'auto' : 'smooth' }); });
     on(track, 'scroll', function () { w.requestAnimationFrame(state); }, { passive: true });
     on(w, 'resize', state);
-    state();
+    w.requestAnimationFrame(state);
   });
 
   root.classList.add('is-ready');

@@ -71,7 +71,7 @@ $hasFeature = function (array $room, string $label): bool {
 
     <!-- Cards -->
     <div class="rooms-view" data-view="cards" role="tabpanel">
-      <?php foreach ($groups as $beds => $list): ?>
+      <?php $shown = 0; foreach ($groups as $beds => $list): ?>
         <div class="room-group" data-group="<?= (int)$beds ?>">
           <?php if ($group): ?>
           <div class="group-head" data-reveal>
@@ -86,7 +86,7 @@ $hasFeature = function (array $room, string $label): bool {
           <?php endif; ?>
           <div class="room-grid">
             <?php foreach ($list as $i => $room): ?>
-              <?= View::partial('front/partials/room-card', ['room' => $room, 'i' => $i]) ?>
+              <?= View::partial('front/partials/room-card', ['room' => $room, 'i' => $i, 'eager' => $shown++ < 2]) ?>
             <?php endforeach; ?>
           </div>
         </div>

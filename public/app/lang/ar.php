@@ -99,6 +99,7 @@ return [
     'gallery.empty' => 'ماكو صور لحد الآن.',
     'gallery.all_photos' => 'كل الصور',
     'gallery.viewer' => 'عرض الصورة',
+    'gallery.photo' => 'صورة {n}',
 
     'tour.title' => 'جولة افتراضية ٣٦٠ درجة',
     'tour.subtitle' => 'تمشّوا باللوبي والغرف والكوفي شوب قبل لا توصلون.',

@@ -22,7 +22,7 @@ $flash = flash();
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title><?= e(__('admin.panel')) ?> · <?= e(tr(setting('site.name'))) ?></title>
 <link rel="icon" href="<?= e(asset('img/favicon.svg')) ?>" type="image/svg+xml">
-<link rel="stylesheet" href="<?= e(asset('admin/admin.css')) ?>">
+<link rel="stylesheet" href="<?= e(asset_min('admin/admin.css')) ?>">
 </head>
 <body class="admin">
 <aside class="sb" id="sb" data-sb>
@@ -72,6 +72,6 @@ $flash = flash();
     ],
 ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) ?>;</script>
 <script src="<?= e(asset('vendor/sortable/Sortable.min.js')) ?>" defer></script>
-<script src="<?= e(asset('admin/admin.js')) ?>" defer></script>
+<script src="<?= e(asset_min('admin/admin.js')) ?>" defer></script>
 </body>
 </html>

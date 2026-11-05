@@ -19,10 +19,10 @@ if (!in_array($active, $valid, true)) {
       <?php endforeach; ?>
     </div>
     <div class="masonry" data-gallery>
-      <?php foreach ($items as $i => $it): $m = media($it['media_id']); if (!$m) continue; $show = $active === '' || $it['cat_slug'] === $active; ?>
-        <a class="masonry-item" href="<?= e(Media::src($m, 2400)) ?>" data-lb data-cat="<?= e($it['cat_slug']) ?>" data-caption="<?= e(tr($it['caption'])) ?>"<?= $show ? '' : ' hidden' ?>>
-          <?= picture($m, ['sizes' => '(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw', 'alt' => tr($it['caption']), 'eager' => $i < 4]) ?>
-          <?php if (tr($it['caption']) !== ''): ?><span class="masonry-cap"><?= e(tr($it['caption'])) ?></span><?php endif; ?>
+      <?php foreach ($items as $i => $it): $m = media($it['media_id']); if (!$m) continue; $cap = tr($it['caption']); $alt = $cap === '' ? tr($m['alt'] ?? '') : ''; $show = $active === '' || $it['cat_slug'] === $active; ?>
+        <a class="masonry-item" href="<?= e(Media::src($m, 2400)) ?>" data-lb data-cat="<?= e($it['cat_slug']) ?>" data-caption="<?= e($cap) ?>"<?= $cap === '' && $alt === '' ? ' aria-label="' . e(__('gallery.photo', ['n' => num($i + 1)])) . '"' : '' ?><?= $show ? '' : ' hidden' ?>>
+          <?= picture($m, ['sizes' => '(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw', 'alt' => $alt, 'eager' => $i < 4]) ?>
+          <?php if ($cap !== ''): ?><span class="masonry-cap"><?= e($cap) ?></span><?php endif; ?>
         </a>
       <?php endforeach; ?>
     </div>
