@@ -42,7 +42,8 @@ public/            ← upload the contents of this folder to public_html
   assets/          css, js, fonts, icons, vendor (Pannellum, Leaflet, Sortable)
   storage/         config, SQLite database, cache, logs, backups – blocked from the web
   uploads/         photos and panoramas
-scripts/           build-release.sh (cPanel zip), install-vps.sh, nginx.conf, dev-server.sh
+release/           ready-to-upload cPanel zip (venus-hotel-1.0.0.zip)
+scripts/           build-release.sh (cPanel zip), minify.sh (CSS/JS), install-vps.sh, nginx.conf, dev-server.sh
 tests/             Playwright smoke + end-to-end tests
 tools/             dev-only generators: demo 3D renders + 360 panoramas, sight illustrations, icon sprite
 ```
@@ -53,6 +54,10 @@ tools/             dev-only generators: demo 3D renders + 360 panoramas, sight i
 php public/app/cli.php install --user=admin --pass=venus12345   # add --no-demo for an empty site
 bash scripts/dev-server.sh                                      # http://localhost:8000  ·  /admin
 ```
+
+## Editing CSS / JS
+
+The site serves `site.min.css` / `site.min.js` (and `admin.min.*`) only while they match their source files, so edits to `site.css` or `site.js` show up at once. Run `bash scripts/minify.sh` (needs Node.js) to refresh the minified copies, and `bash scripts/build-release.sh` to rebuild the zip in `release/`.
 
 ## Tests
 

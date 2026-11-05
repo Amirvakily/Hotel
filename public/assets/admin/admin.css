@@ -235,8 +235,9 @@ html[dir="rtl"] .tbl tr[style*="--row-color"] td:first-child, html[dir="rtl"] .t
 .check-chip input:checked + span { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-d); }
 .check-chip input:focus-visible + span { box-shadow: 0 0 0 3px var(--accent-soft); }
 .price-inp { position: relative; display: flex; align-items: center; }
-.price-inp .inp { padding-inline-end: 52px; min-width: 130px; font-feature-settings: "tnum"; }
-.price-inp span { position: absolute; inset-inline-end: 10px; font-size: .72rem; color: var(--muted); pointer-events: none; }
+/* The number is always typed left-to-right, so the unit sits on the right in every language */
+.price-inp .inp { padding-right: 52px; padding-left: 12px; min-width: 130px; font-feature-settings: "tnum"; }
+.price-inp span { position: absolute; right: 10px; font-size: .72rem; color: var(--muted); pointer-events: none; }
 .prices-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
 .price-row { display: grid; gap: 4px; padding: 10px; border-radius: 12px; background: #fafaf8; border: 1px solid var(--line); }
 .price-row-label { display: inline-flex; align-items: center; gap: 6px; font-size: .84rem; font-weight: 650; color: var(--muted); }
@@ -410,13 +411,18 @@ html[dir="rtl"] .tbl tr[style*="--row-color"] td:first-child, html[dir="rtl"] .t
   .tbl td[data-label]:not([data-label=""])::before { content: attr(data-label); display: inline-block; min-width: 110px; color: var(--muted); font-size: .78rem; }
   .tbl td.w-handle { position: absolute; top: 10px; inset-inline-end: 8px; width: auto; }
   .tbl td.w-actions { text-align: start; padding-top: 8px; }
-  .tbl tr[style*="--row-color"] td:first-child { box-shadow: none; }
+  /* On phones the colour stripe runs down the start edge of the whole card */
+  .tbl tr[style*="--row-color"] td:first-child, .tbl tr[style*="--row-color"] th:first-child,
+  html[dir="rtl"] .tbl tr[style*="--row-color"] td:first-child, html[dir="rtl"] .tbl tr[style*="--row-color"] th:first-child { box-shadow: none; }
   .tbl tr[style*="--row-color"] { box-shadow: inset 3px 0 0 var(--row-color); }
+  html[dir="rtl"] .tbl tr[style*="--row-color"] { box-shadow: inset -3px 0 0 var(--row-color); }
   .price-grid, .price-grid tbody, .price-grid tr, .price-grid td, .price-grid th { display: block; width: 100%; }
   .price-grid thead { display: none; }
   .price-grid tr { padding: 12px; }
   .price-grid th { padding: 0 0 8px; border: 0; }
   .price-grid td { display: inline-block; width: calc(50% - 6px); min-width: 0; border: 0; padding: 3px 0; vertical-align: top; }
+  .price-grid td[data-label]:not([data-label=""])::before { display: block; min-width: 0; margin-bottom: 2px; }
+  .price-grid td.is-na { display: none; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
   .sec-row { grid-template-columns: 1fr 1fr; }
   .hs-item { grid-template-columns: auto 1fr; }

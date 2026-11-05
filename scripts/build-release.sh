@@ -23,4 +23,5 @@ ZIP="$OUT/venus-hotel-$VERSION.zip"
 rm -f "$ZIP"
 (cd "$STAGE" && zip -qr9 "$ZIP" . -x "*.DS_Store")
 rm -rf "$STAGE"
-echo "Created $ZIP ($(du -h "$ZIP" | cut -f1))"
+mkdir -p "$ROOT/release" && cp "$ZIP" "$ROOT/release/"
+echo "Created $ZIP ($(du -h "$ZIP" | cut -f1)) and copied it to release/"

@@ -17,7 +17,7 @@
 
 ## نصب روی cPanel (پیشنهادی)
 
-1. **فایل zip را بسازید یا دانلود کنید.** روی کامپیوتر: `bash scripts/build-release.sh` ← فایل `dist/venus-hotel-1.0.0.zip` ساخته می‌شود. (یا از بخش Releases گیت‌هاب دانلود کنید.)
+1. **فایل zip را دانلود کنید.** در گیت‌هاب این پروژه فایل [`release/venus-hotel-1.0.0.zip`](release/venus-hotel-1.0.0.zip) را باز کنید و **Download raw file** را بزنید. (برنامه‌نویس‌ها می‌توانند با `bash scripts/build-release.sh` آن را دوباره بسازند.)
 2. وارد cPanel شوید ← **File Manager** ← پوشه `public_html` (یا پوشه یک ساب‌دامین).
 3. **Upload** را بزنید و فایل zip را بارگذاری کنید. سپس روی آن راست‌کلیک ← **Extract**.
    - فایل‌ها باید مستقیماً داخل `public_html` باشند (یعنی `public_html/index.php` وجود داشته باشد).

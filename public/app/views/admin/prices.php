@@ -39,9 +39,10 @@ foreach ($presets as $p) { if ((int)$p['id'] === $active) { $activePreset = $p; 
           <tr style="--row-color:<?= e($r['color'] ?: '#0b8a7a') ?>" class="<?= $r['active'] ? '' : 'is-off' ?>">
             <th><a href="<?= e(admin_url('r/rooms/' . $r['id'])) ?>"><?= e(tr($r['name'])) ?></a><?php if (tr($r['badge']) !== ''): ?><small class="muted d-block"><?= e(tr($r['badge'])) ?></small><?php endif; ?></th>
             <?php for ($g = 1; $g <= $maxG; $g++): ?>
-              <td><?php if ($g >= (int)$r['min_guests'] && $g <= (int)$r['max_guests']): ?><?= AdminForm::priceInput('p[' . (int)$r['id'] . '][' . $g . ']', $pr[(string)$g] ?? null) ?><?php else: ?><span class="muted" title="<?= e(__('rooms.unfit', ['n' => $g])) ?>">—</span><?php endif; ?></td>
+              <?php $fits = $g >= (int)$r['min_guests'] && $g <= (int)$r['max_guests']; ?>
+              <td data-label="<?= e(__('rooms.n_people', ['n' => $g])) ?>"<?= $fits ? '' : ' class="is-na"' ?>><?php if ($fits): ?><?= AdminForm::priceInput('p[' . (int)$r['id'] . '][' . $g . ']', $pr[(string)$g] ?? null) ?><?php else: ?><span class="muted" title="<?= e(__('rooms.unfit', ['n' => $g])) ?>">—</span><?php endif; ?></td>
             <?php endfor; ?>
-            <td><?php if ((int)($r['max_extra'] ?? 0) > 0): ?><?= AdminForm::priceInput('x[' . (int)$r['id'] . ']', $current['extra'][(int)$r['id']] ?? null) ?><?php else: ?><span class="muted" title="<?= e(__('admin.no_extra')) ?>">—</span><input type="hidden" name="x[<?= (int)$r['id'] ?>]" value="<?= e($current['extra'][(int)$r['id']] ?? '') ?>"><?php endif; ?></td>
+            <td data-label="<?= e(__('admin.f.extra_person')) ?>"<?= (int)($r['max_extra'] ?? 0) > 0 ? '' : ' class="is-na"' ?>><?php if ((int)($r['max_extra'] ?? 0) > 0): ?><?= AdminForm::priceInput('x[' . (int)$r['id'] . ']', $current['extra'][(int)$r['id']] ?? null) ?><?php else: ?><span class="muted" title="<?= e(__('admin.no_extra')) ?>">—</span><input type="hidden" name="x[<?= (int)$r['id'] ?>]" value="<?= e($current['extra'][(int)$r['id']] ?? '') ?>"><?php endif; ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>

@@ -17,7 +17,7 @@ The site is plain PHP and runs on ordinary **cPanel** shared hosting with nothin
 
 ## cPanel (recommended)
 
-1. **Get the zip.** On your computer run `bash scripts/build-release.sh` → `dist/venus-hotel-1.0.0.zip` (or download it from GitHub Releases).
+1. **Get the zip.** Download [`release/venus-hotel-1.0.0.zip`](release/venus-hotel-1.0.0.zip) from this repository (open the file on GitHub → **Download raw file**). Developers can rebuild it with `bash scripts/build-release.sh` → `dist/venus-hotel-1.0.0.zip`.
 2. cPanel → **File Manager** → `public_html` (or a subdomain folder).
 3. **Upload** the zip, right-click it → **Extract**. `public_html/index.php` must exist afterwards.
 4. Make sure `storage` and `uploads` are writable (permissions `755`, or `775` if you get errors).
