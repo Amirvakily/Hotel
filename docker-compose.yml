@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    ports: ["8080:80"]
+    volumes:
+      - storage:/var/www/html/storage
+      - uploads:/var/www/html/uploads
+    restart: unless-stopped
+volumes:
+  storage:
+  uploads:

@@ -1,0 +1,19 @@
+# local data – never commit
+public/storage/config.php
+public/storage/database.sqlite*
+public/storage/cache/*
+!public/storage/cache/.gitkeep
+public/storage/logs/*
+!public/storage/logs/.gitkeep
+public/storage/backups/*
+!public/storage/backups/.gitkeep
+public/storage/sessions/
+public/uploads/*
+!public/uploads/.htaccess
+!public/uploads/.gitkeep
+!public/uploads/index.html
+dist/
+node_modules/
+tools/render/node_modules/
+.DS_Store
+*.log

@@ -1,0 +1,134 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Venus render</title>
+<style>html,body{margin:0;background:#111}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/tools/render/node_modules/three/build/three.module.js","three/addons/":"/tools/render/node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { initMaterials } from './kit.js';
+import { SCENES } from './scenes.js';
+
+RectAreaLightUniformsLib.init();
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.AgXToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setPixelRatio(1);
+document.body.appendChild(renderer.domElement);
+
+async function loadFonts() {
+  for (const [name, url] of [['Vazirmatn', '/public/assets/fonts/vazirmatn-var.woff2'], ['Jakarta', '/public/assets/fonts/jakarta-var.woff2']]) {
+    const f = new FontFace(name, `url(${url})`, { weight: '100 900' }); await f.load(); document.fonts.add(f);
+  }
+}
+let envTex = null;
+function env(scene, intensity) {
+  if (!envTex) { const pm = new THREE.PMREMGenerator(renderer); envTex = pm.fromScene(new RoomEnvironment(), 0.04).texture; }
+  scene.environment = envTex; scene.environmentIntensity = intensity;
+}
+function composerFor(scene, camera, w, h, o) {
+  renderer.setSize(w, h, false);
+  const c = new EffectComposer(renderer); c.setPixelRatio(1); c.setSize(w, h);
+  c.addPass(new RenderPass(scene, camera));
+  if (o.ao !== false) {
+    const ao = new GTAOPass(scene, camera, w, h);
+    ao.blendIntensity = o.aoIntensity ?? 1.0;
+    ao.updateGtaoMaterial({ radius: o.aoRadius ?? .45, distanceExponent: 1.2, thickness: 1.2, scale: 1, samples: 16 });
+    ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 6, rings: 2, samples: 16 });
+    c.addPass(ao);
+  }
+  if (o.bloom !== false) c.addPass(new UnrealBloomPass(new THREE.Vector2(w, h), o.bloomStrength ?? .14, .45, o.bloomThreshold ?? .95));
+  c.addPass(new OutputPass());
+  return c;
+}
+function shiftProjection(cam, shift) { cam.updateProjectionMatrix(); if (shift) cam.projectionMatrix.elements[9] = shift; cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert(); }
+
+let built = null;
+function build(name) {
+  if (built && built.name === name) return built;
+  initMaterials();
+  const s = SCENES[name]();
+  s.scene.traverse(o => { if (o.isMesh && o.material && o.material.map && !o.material.map.isCanvasTexture) {} });
+  env(s.scene, s.env ?? .22);
+  built = { name, ...s };
+  return built;
+}
+function grab(srcCanvas, outW, outH) {
+  const c = document.createElement('canvas'); c.width = outW; c.height = outH;
+  const g = c.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+  g.drawImage(srcCanvas, 0, 0, outW, outH);
+  return c;
+}
+
+window.renderPhoto = async (name, shotName, outW, outH, ss = 1.5, opts = {}) => {
+  await loadFonts();
+  const s = build(name);
+  const shot = s.shots[shotName];
+  const W = Math.round(outW * ss), H = Math.round(outH * ss);
+  const cam = new THREE.PerspectiveCamera(shot.fov || 60, W / H, .05, 200);
+  cam.position.set(...shot.pos); cam.lookAt(new THREE.Vector3(shot.pos[0], shot.pos[1] + (shot.target[1] - shot.pos[1]) * (shot.level === false ? 1 : 0), shot.pos[2]).lerp(new THREE.Vector3(...shot.target), 1));
+  // keep verticals straight: aim at the target horizontally, then shift the lens
+  cam.lookAt(shot.target[0], shot.pos[1], shot.target[2]);
+  shiftProjection(cam, shot.shift ?? 0);
+  renderer.toneMapping = opts.tone === 'agx' ? THREE.AgXToneMapping : (opts.tone === 'neutral' ? THREE.NeutralToneMapping : THREE.ACESFilmicToneMapping);
+  renderer.toneMappingExposure = (s.exposure ?? 1) * (opts.exposure ?? 1);
+  const comp = composerFor(s.scene, cam, W, H, { ...opts });
+  comp.render();
+  const out = grab(renderer.domElement, outW, outH);
+  return out.toDataURL('image/jpeg', opts.q ?? .88);
+};
+
+// 360° panorama: render 6 cube faces through the same pipeline, then resample to equirectangular.
+window.renderPano = async (name, face = 1536, outW = 4096, opts = {}) => {
+  await loadFonts();
+  const s = build(name);
+  const p = new THREE.Vector3(...s.pano.pos);
+  renderer.toneMapping = opts.tone === 'agx' ? THREE.AgXToneMapping : (opts.tone === 'neutral' ? THREE.NeutralToneMapping : THREE.ACESFilmicToneMapping);
+  renderer.toneMappingExposure = (s.exposure ?? 1) * (opts.exposure ?? 1);
+  const dirs = [[0, 0, -1, 0, 1, 0], [1, 0, 0, 0, 1, 0], [0, 0, 1, 0, 1, 0], [-1, 0, 0, 0, 1, 0], [0, 1, 0, 0, 0, 1], [0, -1, 0, 0, 0, -1]];
+  const faces = [];
+  for (const d of dirs) {
+    const cam = new THREE.PerspectiveCamera(90, 1, .05, 200);
+    cam.position.copy(p); cam.up.set(d[3], d[4], d[5]); cam.lookAt(p.x + d[0], p.y + d[1], p.z + d[2]); cam.updateMatrixWorld(); cam.updateProjectionMatrix();
+    const comp = composerFor(s.scene, cam, face, face, { ...opts, bloom: opts.bloom ?? false });
+    comp.render();
+    const c = grab(renderer.domElement, face, face);
+    const e = cam.matrixWorld.elements;
+    faces.push({ data: c.getContext('2d').getImageData(0, 0, face, face).data, r: [e[0], e[1], e[2]], u: [e[4], e[5], e[6]], f: [-e[8], -e[9], -e[10]] });
+  }
+  const outH = outW / 2, out = document.createElement('canvas'); out.width = outW; out.height = outH;
+  const og = out.getContext('2d'), img = og.createImageData(outW, outH), D = img.data;
+  const N = face;
+  for (let y = 0; y < outH; y++) {
+    const lat = (.5 - (y + .5) / outH) * Math.PI, cl = Math.cos(lat), sl = Math.sin(lat);
+    for (let x = 0; x < outW; x++) {
+      const lon = ((x + .5) / outW - .5) * Math.PI * 2;
+      const dx = Math.sin(lon) * cl, dy = sl, dz = -Math.cos(lon) * cl;
+      let best = 0, bd = -2;
+      for (let k = 0; k < 6; k++) { const f = faces[k].f, dot = dx * f[0] + dy * f[1] + dz * f[2]; if (dot > bd) { bd = dot; best = k; } }
+      const F = faces[best];
+      const px = (dx * F.r[0] + dy * F.r[1] + dz * F.r[2]) / bd, py = (dx * F.u[0] + dy * F.u[1] + dz * F.u[2]) / bd;
+      let u = (px + 1) / 2 * N - .5, v = (1 - py) / 2 * N - .5;
+      u = Math.max(0, Math.min(N - 1.001, u)); v = Math.max(0, Math.min(N - 1.001, v));
+      const x0 = u | 0, y0 = v | 0, fx = u - x0, fy = v - y0, S = F.data;
+      const i00 = (y0 * N + x0) * 4, i10 = i00 + 4, i01 = i00 + N * 4, i11 = i01 + 4, o = (y * outW + x) * 4;
+      for (let c = 0; c < 3; c++) D[o + c] = (S[i00 + c] * (1 - fx) + S[i10 + c] * fx) * (1 - fy) + (S[i01 + c] * (1 - fx) + S[i11 + c] * fx) * fy;
+      D[o + 3] = 255;
+    }
+  }
+  og.putImageData(img, 0, 0);
+  const sizes = {};
+  for (const [k, wv, q] of [['main', outW, .86], ['mobile', 2048, .84], ['thumb', 1024, .8]]) sizes[k] = (wv === outW ? out : grab(out, wv, wv / 2)).toDataURL('image/jpeg', q);
+  return sizes;
+};
+window.ready = true;
+</script>
+</body></html>

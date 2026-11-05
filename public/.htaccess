@@ -1,0 +1,62 @@
+# Venus Hotel – Apache / cPanel configuration
+Options -Indexes
+DirectoryIndex index.php
+AddDefaultCharset UTF-8
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # If the site lives in a sub-folder and links break, set RewriteBase to that folder, e.g. /hotel/
+  # RewriteBase /
+
+  # Block private folders
+  RewriteRule ^(app|storage)(/|$) - [F,L]
+  RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+  # Optional: force HTTPS (remove the # from the next two lines once SSL works)
+  # RewriteCond %{HTTPS} !=on
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Real files and folders are served directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else goes to the front controller
+  RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml application/javascript application/json image/svg+xml font/ttf
+</IfModule>
+
+# Long browser cache for versioned static files (URLs carry ?v=...)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|woff2|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|woff2|svg|jpe?g|png|webp|gif)$">
+    Header set X-Content-Type-Options "nosniff"
+  </FilesMatch>
+</IfModule>
+
+AddType font/woff2 .woff2
+AddType image/webp .webp
+
+# PHP settings for uploads (ignored where the host does not allow them)
+<IfModule mod_php.c>
+  php_value upload_max_filesize 32M
+  php_value post_max_size 64M
+  php_value memory_limit 256M
+  php_value max_execution_time 120
+</IfModule>

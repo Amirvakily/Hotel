@@ -1,0 +1,8 @@
+{
+  "name": "venus-render",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tool: renders the demo photos and 360 panoramas used by the installer's demo content.",
+  "scripts": { "render": "node render.mjs" },
+  "dependencies": { "three": "0.187.0" }
+}
