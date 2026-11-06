@@ -38,7 +38,7 @@ final class AdminResources
                     ['name' => 'price_note', 'type' => 'i18n', 'label' => 'admin.f.price_note', 'tab' => 'prices'],
                     ['name' => 'cover_id', 'type' => 'image', 'label' => 'admin.f.cover', 'tab' => 'photos'],
                     ['name' => 'gallery', 'type' => 'images', 'label' => 'admin.f.gallery', 'tab' => 'photos', 'help' => 'admin.h.gallery'],
-                    ['name' => 'scene_id', 'type' => 'select', 'label' => 'admin.f.scene', 'tab' => 'photos', 'source' => 'scenes', 'empty' => true, 'help' => 'admin.h.scene'],
+                    ['name' => 'scene_id', 'type' => 'select', 'label' => 'admin.f.scene', 'tab' => 'photos', 'source' => 'scenes', 'empty' => true, 'help' => Content::tourOn() ? 'admin.h.scene' : 'admin.h.scene_off'],
                     ['name' => 'amenities', 'type' => 'multi', 'label' => 'admin.f.amenities', 'tab' => 'amenities', 'source' => 'amenities:room'],
                     ['name' => 'features', 'type' => 'features', 'label' => 'admin.f.features', 'tab' => 'amenities', 'help' => 'admin.h.features'],
                     ['name' => 'featured', 'type' => 'bool', 'label' => 'admin.f.featured', 'tab' => 'basic', 'help' => 'admin.h.featured', 'half' => true],

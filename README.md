@@ -16,7 +16,7 @@ Persian first (RTL), with English and Iraqi-friendly Arabic. Built to *show* the
 - Rooms with **price by number of guests**, extra people (e.g. 4 guests in a triple at the 3-guest price + a per-person charge), children-under-5-free counter, a "7+" group option, and "Call for price" when a price is empty.
 - Three triple-room types told apart by colour badge, a drawn **bed plan**, size, view, "what's different" line, and a **compare table**; full **price table** view.
 - Room pages with photo grid + lightbox, sticky price card, WhatsApp message pre-filled with room and guests, 360° view.
-- **360° virtual tour** (Pannellum) with linked scenes, hotspots, auto-rotate, gyroscope, full screen; external 3D models (Matterport/Kuula/Polycam) can be embedded.
+- **360° virtual tour** (Pannellum) with linked scenes, hotspots, auto-rotate, gyroscope, full screen; external 3D models (Matterport/Kuula/Polycam) can be embedded. One switch hides the whole tour from the site (on by default).
 - Gallery with categories + swipeable lightbox; breakfast and café pages with menus; Tabriz guide with distances; FAQ; reviews; contact form (spam-protected) → admin inbox.
 - Map (Leaflet + OpenStreetMap) with **Neshan, Balad, Google Maps and Waze** buttons.
 - Persian / Jalali dates and digits, Arabic-Indic digits for Arabic, approximate prices in USD / Iraqi dinar.

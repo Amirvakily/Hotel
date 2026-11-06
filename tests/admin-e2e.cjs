@@ -179,6 +179,34 @@ const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
   const bad = await p.request.post(base + '/admin/r/rooms/1/delete', { headers: { Accept: 'application/json' } });
   ok(bad.status() === 403, 'POST without CSRF token refused (' + bad.status() + ')');
 
+  // 14. 360° tour switch: off removes every trace from the public site, on brings it back
+  const visitor = await b.newContext({ viewport: { width: 1360, height: 900 } });   // no admin cookie
+  const pp = await visitor.newPage();
+  const traces = async () => {
+    let total = 0;
+    for (const path of ['/', '/rooms', '/rooms/deluxe-triple', '/en/', '/ar/rooms/deluxe-triple']) {
+      await pp.goto(base + path, { waitUntil: 'domcontentloaded' });
+      total += await pp.evaluate(() => document.querySelectorAll('a[href*="/tour"], .hero-360, .tour-panel, #room-360, .room-360, [data-pano], [data-tour]').length);
+    }
+    const tourStatus = (await pp.request.get(base + '/tour')).status();
+    const inSitemap = /\/tour</.test(await (await pp.request.get(base + '/sitemap.xml')).text());
+    return { total, tourStatus, inSitemap };
+  };
+  let t = await traces();
+  ok(t.total > 0 && t.tourStatus === 200 && t.inSitemap, `tour on: shown on the site (${t.total} links/blocks, /tour ${t.tourStatus})`);
+  await go('/admin/r/scenes');
+  await Promise.all([p.waitForNavigation(), p.locator('.tour-switch .switch').click()]);
+  ok(await p.locator('.tour-switch.state-off').count() === 1 && (await flash()) !== '', 'tour switched off from the 360° page: ' + (await flash()));
+  t = await traces();
+  ok(t.total === 0 && t.tourStatus === 404 && !t.inSitemap, `tour off: no trace left (${t.total} links/blocks, /tour ${t.tourStatus}, in sitemap: ${t.inSitemap})`);
+  await go('/admin/sections');
+  ok(await p.locator('.sl-why').count() >= 1, 'home sections list says why the tour section is hidden');
+  await go('/admin/r/scenes');
+  await Promise.all([p.waitForNavigation(), p.locator('.tour-switch .switch').click()]);
+  t = await traces();
+  ok(t.total > 0 && t.tourStatus === 200 && await p.locator('.tour-switch.state-on').count() === 1, 'tour back on after switching it on');
+  await visitor.close();
+
   ok(errors.length === 0, 'no JavaScript errors' + (errors.length ? ': ' + errors.join(' / ') : ''));
   console.log(failures ? `\n${failures} FAILED` : '\nALL PASSED');
   await b.close();

@@ -166,7 +166,7 @@ html[lang="en"] .brand-name { letter-spacing: -.02em; }
 .is-over:not(.is-scrolled) .main-nav a[aria-current="page"] { background: #fff; color: var(--c-ink); }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 .lang-switch { position: relative; }
-.lang-btn { width: auto; padding-inline: 12px; gap: 6px; display: inline-flex; font-size: .85rem; font-weight: 600; height: 44px; }
+.lang-btn { width: auto; padding-inline: 12px; gap: 6px; display: inline-flex; font-size: .85rem; font-weight: 600; height: 44px; border-radius: 999px; }
 .is-over:not(.is-scrolled) .icon-btn { border-color: rgba(255,255,255,.3); }
 .is-over:not(.is-scrolled) .icon-btn:hover { background: #fff; color: var(--c-ink); }
 .lang-menu { position: absolute; top: calc(100% + 10px); inset-inline-end: 0; min-width: 160px; padding: 6px; background: var(--c-surface); color: var(--c-ink); border-radius: 16px; box-shadow: var(--shadow-lg); border: 1px solid var(--c-line); animation: pop .22s var(--ease-out); }
@@ -845,7 +845,7 @@ html[lang="en"] .footer-word { letter-spacing: -.07em; }
   .header-call { display: none; }
   .header-bar { padding-inline: 12px 8px; }
   .icon-btn { width: 40px; height: 40px; }
-  .lang-btn { height: 40px; }
+  .lang-btn { width: auto; height: 40px; padding-inline: 10px; }  /* keep the label inside the pill */
   .dock { position: fixed; inset-inline: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 80; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 6px; border-radius: 22px; background: rgba(17, 19, 22, .9); background: color-mix(in oklab, var(--c-primary) 90%, transparent); color: #fff; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 18px 40px -14px rgba(0,0,0,.55); transition: transform .45s var(--ease); }
   .dock a { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 4px; border-radius: 16px; font-size: .72rem; font-weight: 600; }
   .dock a:hover { background: rgba(255,255,255,.08); }

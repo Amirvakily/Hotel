@@ -50,7 +50,7 @@ $stars = (int)setting('site.stars', 3);
       </div>
       <p class="hero-caption" data-hero-caption><?= e(tr($slides[0]['title'] ?? '')) ?></p>
       <?php endif; ?>
-      <?php if (Content::navEnabled('tour') && Content::scenes()): ?>
+      <?php if (Content::tourOn()): ?>
         <a class="hero-360" href="<?= e(url('tour')) ?>"><span><?= icon('rotate-3d') ?></span><?= e(__('hero.tour')) ?></a>
       <?php endif; ?>
     </div>

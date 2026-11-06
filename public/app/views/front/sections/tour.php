@@ -1,7 +1,7 @@
 <?php
 /** @var array $d */
 $scenes = Content::scenes();
-if (!$scenes || !Content::navEnabled('tour')) return;
+if (!Content::tourOn()) return;
 $first = null;
 foreach ($scenes as $s) { if ($s['type'] !== 'embed' && media($s['media_id'])) { $first = $s; if ($s['is_default']) break; } }
 $cover = media($d['image_id'] ?? null) ?: ($first ? media($first['media_id']) : null);

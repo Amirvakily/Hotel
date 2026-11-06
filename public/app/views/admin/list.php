@@ -20,6 +20,20 @@ if (($res['filter'] ?? '') === 'section') {
     <a class="btn btn-accent" href="<?= e(admin_url('r/' . $key . '/new')) ?>"><?= icon('plus') ?><?= e(__('admin.add_new')) ?></a>
   </div>
 </div>
+<?php if ($key === 'scenes'):
+    $tourSwitch = Content::navSwitch('tour');
+    $tourState = !$tourSwitch ? 'off' : (Content::usableScenes() ? 'on' : 'empty'); ?>
+<form class="card tour-switch state-<?= e($tourState) ?>" method="post" action="<?= e(admin_url('r/scenes/switch')) ?>">
+  <?= csrf_field() ?>
+  <label class="switch">
+    <input type="checkbox" name="on" value="1"<?= $tourSwitch ? ' checked' : '' ?><?= Auth::isAdmin() ? '' : ' disabled' ?> data-autosubmit>
+    <span class="switch-ui"></span><span><?= e(__('admin.tour_switch')) ?></span>
+  </label>
+  <p class="tour-switch-state"><?= icon($tourState === 'on' ? 'eye' : 'eye-off') ?><span><?= e(__('admin.tour_state_' . $tourState)) ?></span></p>
+  <?php if (!Auth::isAdmin()): ?><p class="muted small"><?= e(__('admin.tour_admin_only')) ?></p><?php endif; ?>
+  <noscript><button class="btn btn-sm" type="submit"><?= icon('save') ?><?= e(__('admin.save')) ?></button></noscript>
+</form>
+<?php endif; ?>
 <div class="card card-flush">
   <div class="list-tools">
     <input class="inp" type="search" placeholder="<?= e(__('admin.search')) ?>" data-list-search>

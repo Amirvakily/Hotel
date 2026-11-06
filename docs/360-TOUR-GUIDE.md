@@ -36,5 +36,11 @@
 On phones, guests can tap **Move with your phone** to look around by turning the phone (needs HTTPS).
 در گوشی، مهمان با دکمه «حرکت با گوشی» و چرخاندن گوشی اطراف را می‌بیند (نیاز به HTTPS).
 
+## Turning the tour off / خاموش کردن تور
+
+Admin → **360° tour** → switch **Show the 360° tour on the website** off (administrators only). The tour then disappears everywhere: the menu link, the button on the home-page photo, the home-page tour section, the 360° view and badge on room pages, the tour page itself (it returns “not found”) and the sitemap. Your scenes are kept; switch it on again to bring everything back. With no active 360° photo the tour stays hidden on its own.
+
+پنل ← **تور ۳۶۰ درجه** ← کلید «نمایش تور ۳۶۰ در سایت» را خاموش کنید (فقط مدیر کل). تور از همه جای سایت حذف می‌شود: منو، دکمه روی عکس صفحه اصلی، بخش تور صفحه اصلی، نمای ۳۶۰ و نشان ۳۶۰ اتاق‌ها، صفحه تور و نقشه سایت. صحنه‌ها پاک نمی‌شوند و با روشن کردن برمی‌گردند. اگر هیچ تصویر ۳۶۰ فعالی نباشد، تور خودبه‌خود پنهان می‌ماند.
+
 The demo tour that ships with the site was rendered from 3D models, so replace it with real photos of the hotel.
 تور نمونه از مدل سه‌بعدی ساخته شده؛ آن را با عکس‌های واقعی هتل جایگزین کنید.

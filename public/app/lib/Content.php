@@ -322,7 +322,7 @@ final class Content
         $out = [];
         foreach ((array)setting('nav.items', []) as $item) {
             $k = $item['key'] ?? '';
-            if (empty($item['on']) || !isset($labels[$k])) {
+            if (empty($item['on']) || !isset($labels[$k]) || ($k === 'tour' && !self::tourOn())) {
                 continue;
             }
             $out[] = ['key' => $k, 'label' => __($labels[$k][0]), 'url' => url($labels[$k][1]), 'path' => $labels[$k][1]];
@@ -333,7 +333,14 @@ final class Content
         return $out;
     }
 
+    /** Is this page switched on? The 360° tour also needs at least one usable scene. */
     public static function navEnabled(string $key): bool
+    {
+        return $key === 'tour' ? self::tourOn() : self::navSwitch($key);
+    }
+
+    /** The on/off switch for a page in Settings → Menu (also flipped from the 360° tour page). */
+    public static function navSwitch(string $key): bool
     {
         foreach ((array)setting('nav.items', []) as $item) {
             if (($item['key'] ?? '') === $key) {
@@ -341,5 +348,32 @@ final class Content
             }
         }
         return true;
+    }
+
+    /**
+     * The 360° tour is shown only when it is switched on and has a scene with a photo or a 3D link.
+     * When it is off, every trace of it disappears: menu link, hero button, home section,
+     * room-page view and badge, the tour page itself and its sitemap entry.
+     */
+    public static function tourOn(): bool
+    {
+        return self::memo('tourOn', function () {
+            if (!self::navSwitch('tour')) {
+                return false;
+            }
+            return self::usableScenes() > 0;
+        });
+    }
+
+    /** Number of active scenes that can actually be shown. */
+    public static function usableScenes(): int
+    {
+        $n = 0;
+        foreach (self::scenes() as $s) {
+            if ($s['type'] === 'embed' ? trim((string)$s['embed_url']) !== '' : (bool)media($s['media_id'])) {
+                $n++;
+            }
+        }
+        return $n;
     }
 }

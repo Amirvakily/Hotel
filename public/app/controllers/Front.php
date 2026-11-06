@@ -134,7 +134,7 @@ final class Front
         }
         media_preload(array_merge([$room['cover_id']], $room['gallery']));
         $scene = null;
-        if ($room['scene_id']) {
+        if ($room['scene_id'] && Content::tourOn()) {
             $s = DB::one('SELECT slug FROM scenes WHERE id = ? AND active = 1', [$room['scene_id']]);
             if ($s) {
                 $scene = $s['slug'];

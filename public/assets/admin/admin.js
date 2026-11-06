@@ -545,4 +545,14 @@
       on(b, 'mouseleave', function () { tip.hidden = true; });
     });
   });
+
+  // ---------- switches that save at once (e.g. the 360° tour on/off) ----------
+  document.querySelectorAll('[data-autosubmit]').forEach(function (el) {
+    el.addEventListener('change', function () {
+      var f = el.form;
+      if (!f) return;
+      el.closest('.card') && el.closest('.card').classList.add('is-busy');
+      if (f.requestSubmit) f.requestSubmit(); else f.submit();
+    });
+  });
 })();

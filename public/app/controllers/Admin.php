@@ -207,6 +207,26 @@ final class Admin
             flash(__('admin.added_n', ['n' => count($ids)]));
             redirect(admin_url('r/gallery_items', $cat ? ['category_id' => $cat] : []));
         }
+        if ($id === 'switch' && is_post() && $key === 'scenes') {
+            self::requireAdmin();
+            $on = !empty($_POST['on']);
+            $items = array_values((array)setting('nav.items', []));
+            $found = false;
+            foreach ($items as &$item) {
+                if (($item['key'] ?? '') === 'tour') {
+                    $item['on'] = $on;
+                    $found = true;
+                }
+            }
+            unset($item);
+            if (!$found) {
+                $items[] = ['key' => 'tour', 'on' => $on];
+            }
+            Settings::set('nav.items', $items);
+            self::changed();
+            flash(__($on ? 'admin.tour_switched_on' : 'admin.tour_switched_off'));
+            redirect(admin_url('r/scenes'));
+        }
         if ($id === '') {
             return self::resourceList($res);
         }

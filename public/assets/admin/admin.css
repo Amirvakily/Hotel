@@ -2,7 +2,7 @@
 @font-face { font-family: "Vazirmatn"; src: url("../fonts/vazirmatn-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 :root {
   --ink: #15171a; --muted: #6b7076; --line: #e6e5e1; --line-2: #d7d6d1; --bg: #f4f4f1; --surface: #fff;
-  --accent: #0b8a7a; --accent-d: #087063; --accent-soft: #e1f1ee; --danger: #c2410c; --danger-soft: #fdeee7; --warn: #b7791f;
+  --accent: #0b8a7a; --accent-d: #087063; --accent-soft: #e1f1ee; --danger: #c2410c; --danger-soft: #fdeee7; --warn: #b7791f; --warn-ink: #8a5a14;
   --sb: #111316; --sb-2: #1b1e22; --r: 14px; --r-lg: 18px; --shadow: 0 10px 30px -14px rgba(17,19,22,.25);
   --font: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
 }
@@ -322,6 +322,16 @@ html[dir="rtl"] .tbl tr[style*="--row-color"] td:first-child, html[dir="rtl"] .t
 .section-list li { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
 .sl-text { flex: 1; display: grid; min-width: 0; }
 .sl-text small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-text .sl-why { display: flex; align-items: center; gap: 5px; color: var(--warn-ink); font-weight: 600; white-space: normal; }
+.sl-why .icon { width: 14px; height: 14px; flex: none; }
+/* 360° tour on/off card */
+.tour-switch { display: grid; gap: 8px; border-inline-start: 4px solid var(--accent); }
+.tour-switch.state-off, .tour-switch.state-empty { border-inline-start-color: var(--warn); }
+.tour-switch-state { display: flex; align-items: flex-start; gap: 8px; margin: 0; color: var(--muted); font-size: .9rem; }
+.tour-switch-state .icon { width: 18px; height: 18px; flex: none; margin-top: 3px; }
+.tour-switch.state-on .tour-switch-state .icon { color: var(--accent); }
+.tour-switch.state-off .tour-switch-state .icon, .tour-switch.state-empty .tour-switch-state .icon { color: var(--warn); }
+.tour-switch.is-busy { opacity: .6; pointer-events: none; }
 
 /* prices page */
 .bulk-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px; border-radius: 14px; background: #f7f6f2; margin-bottom: 12px; }
