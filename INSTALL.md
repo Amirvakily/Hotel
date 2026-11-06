@@ -6,7 +6,7 @@ The site is plain PHP and runs on ordinary **cPanel** shared hosting with nothin
 
 | Item | Minimum |
 |---|---|
-| PHP | 8.0 or newer (8.2 – 8.5 tested) |
+| PHP | 8.0 or newer (8.2 / 8.3 recommended) |
 | PHP extensions | `pdo_sqlite` (or `pdo_mysql`), `gd` (with WebP), `mbstring`, `fileinfo`, `zip`, `dom` |
 | Disk | ~80 MB with demo content, plus your photos |
 | Apache | `mod_rewrite` on (standard on cPanel) |
