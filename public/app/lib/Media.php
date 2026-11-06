@@ -71,7 +71,7 @@ final class Media
         if (function_exists('finfo_open')) {
             $f = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($f, $path);
-            finfo_close($f);
+            unset($f);
             if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true)) {
                 throw new RuntimeException('bad_type');
             }
@@ -101,7 +101,7 @@ final class Media
             if ($rot) {
                 $r = imagerotate($img, $rot, 0);
                 if ($r) {
-                    imagedestroy($img);
+                    unset($img);
                     $img = $r;
                 }
             }
@@ -178,7 +178,7 @@ final class Media
             $scale = self::MAX_EDGE / max($w, $h);
             $nw = (int)round($w * $scale);
             $r = self::resize($img, $nw, $alpha);
-            imagedestroy($img);
+            unset($img);
             $img = $r;
             $w = imagesx($img);
             $h = imagesy($img);
@@ -203,7 +203,7 @@ final class Media
                 $size += (int)@filesize($file);
             }
             if ($v !== $img) {
-                imagedestroy($v);
+                unset($v);
             }
         }
 
@@ -219,9 +219,9 @@ final class Media
         imagecopyresampled($px, $tiny, 0, 0, 0, 0, 1, 1, $tw, $th);
         $rgb = imagecolorat($px, 0, 0);
         $color = sprintf('#%02x%02x%02x', ($rgb >> 16) & 255, ($rgb >> 8) & 255, $rgb & 255);
-        imagedestroy($px);
-        imagedestroy($tiny);
-        imagedestroy($img);
+        unset($px);
+        unset($tiny);
+        unset($img);
 
         $row = [
             'kind' => 'image',
@@ -277,7 +277,7 @@ final class Media
             $img = $img ?: self::load($mainTmp, $type);
             $m = self::resize($img, 4096, false);
             self::save($m, UPLOADS . '/' . $base . '-m.jpg', 'jpg', 84);
-            imagedestroy($m);
+            unset($m);
             $variants['mobile'] = $base . '-m.jpg';
         }
         if ($thumbTmp) {
@@ -286,7 +286,7 @@ final class Media
             $img = $img ?: self::load($mainTmp, $type);
             $t = self::resize($img, 1024, false);
             self::save($t, UPLOADS . '/' . $base . '-t.jpg', 'jpg', 80);
-            imagedestroy($t);
+            unset($t);
             $variants['thumb'] = $base . '-t.jpg';
         }
         $color = '#334455';
@@ -300,11 +300,11 @@ final class Media
             $lqip = 'data:image/jpeg;base64,' . base64_encode((string)ob_get_clean());
             $rgb = imagecolorat($tiny, 16, 8);
             $color = sprintf('#%02x%02x%02x', ($rgb >> 16) & 255, ($rgb >> 8) & 255, $rgb & 255);
-            imagedestroy($tiny);
-            imagedestroy($timg);
+            unset($tiny);
+            unset($timg);
         }
         if ($img) {
-            imagedestroy($img);
+            unset($img);
         }
         $row = [
             'kind' => 'pano', 'file' => $base, 'ext' => $ext, 'mime' => 'image/' . ($ext === 'jpg' ? 'jpeg' : $ext),
